@@ -29,51 +29,11 @@ import OccName
 import Var
 
 import System.Hardware.Haskino.ShallowDeepPlugin.Utils
+import System.Hardware.Haskino.ShallowDeepPlugin.XlatEntry
+import System.Hardware.Haskino.ShallowDeepPlugin.HaskinoXlatList
 
 import Data.Boolean
 import System.Hardware.Haskino
-
-data XlatEntry = XlatEntry {  fromId         :: BindM Id
-                            , toId           :: BindM Id
-                           }
-
--- The following talbe defines the names of the Shallow DSL functions
--- to translate from and the Deep DSL functions to translate to.
-xlatList :: [XlatEntry]
-xlatList = [  XlatEntry (thNameToId 'not)
-                        (thNameToId 'Data.Boolean.notB)
-            , XlatEntry (thNameToId '(||))
-                        (thNameToId '(||*))
-            , XlatEntry (thNameToId '(&&))
-                        (thNameToId '(&&*))
-            , XlatEntry (thNameToId '(==))
-                        (thNameToId 'eqE)
-            , XlatEntry (thNameToId '(/=))
-                        (thNameToId 'neqE)
-            , XlatEntry (thNameToId '(>))
-                        (thNameToId 'greatE)
-            , XlatEntry (thNameToId '(<))
-                        (thNameToId 'lessE)
-            , XlatEntry (thNameToId '(>=))
-                        (thNameToId 'greateqE)
-            , XlatEntry (thNameToId '(<))
-                        (thNameToId 'lesseqE)
-            , XlatEntry (thNameToId '(+))
-                        (thNameToId '(+))
-           ]
-
-data BindEnv
-    = BindEnv
-      { pluginModGuts :: ModGuts
-      }
-
-newtype BindM a = BindM { runBindM :: ReaderT BindEnv CoreM a }
-    deriving (Functor, Applicative, Monad
-             ,MonadIO, MonadReader BindEnv)
-
-instance PassCoreM BindM where
-  liftCoreM = BindM . ReaderT . const
-  getModGuts = BindM $ ReaderT (return . pluginModGuts)
 
 repPushPass :: ModGuts -> CoreM ModGuts
 repPushPass guts = do
@@ -156,16 +116,7 @@ changeRepExprAlts ((ac, b, a) : as) = do
   return $ (ac, b, a') : bs'
 
 funcInXlatList :: Id -> BindM (Maybe XlatEntry)
-funcInXlatList id = do
-  funcInXlatList' id xlatList
-    where
-      funcInXlatList' :: Id -> [XlatEntry] -> BindM (Maybe XlatEntry)
-      funcInXlatList' id [] = return Nothing
-      funcInXlatList' id (xl:xls) = do
-          fId <- fromId xl
-          if fId == id
-          then return $ Just xl
-          else funcInXlatList' id xls
+funcInXlatList = funcInGivenXlatList xlatList
 
 pushRep :: XlatEntry -> [CoreExpr] -> BindM CoreExpr
 pushRep xe args = do
