@@ -66,16 +66,6 @@ import System.Hardware.Haskino.ShallowDeepPlugin.HaskinoUtils
 
 
 
--- -- The following lines contain definitions of Template Haskell namde
--- -- for standard Haskell functions.
--- functTyConTH         = ''Data.Functor.Functor
--- unitTyConTH          = ''()
--- bindNameTH           = '(>>=)
--- bindThenNameTH       = '(>>)
--- falseNameTH          = 'Prelude.False
--- fmapNameTH           = '(<$>)
--- returnNameTH         = 'Prelude.return
-
 -- An infix pattern synonym for `App` to make applications with multiple
 -- arguments easier to manipulate:
 infixl 0 :$

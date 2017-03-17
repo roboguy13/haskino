@@ -26,6 +26,8 @@ repNameTH            = 'System.Hardware.Haskino.rep_
 ifThenElseNameTH     = 'System.Hardware.Haskino.ifThenElseE
 ifThenElseUnitNameTH = 'System.Hardware.Haskino.ifThenElseUnitE
 
+-- The following lines contain definitions of Template Haskell named
+-- for standard Haskell functions.
 functTyConTH         = ''Data.Functor.Functor
 unitTyConTH          = ''()
 bindNameTH           = '(>>=)
