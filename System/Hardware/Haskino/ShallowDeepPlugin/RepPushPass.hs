@@ -16,8 +16,6 @@
 -- (>*) proved much harder than expected due to coercions, so
 -- it is at this point incomplete and will not work with such ops.
 -------------------------------------------------------------------------------
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE TemplateHaskell #-}
 module System.Hardware.Haskino.ShallowDeepPlugin.RepPushPass (repPushPass) where
 
 import CoreMonad
@@ -33,7 +31,6 @@ import System.Hardware.Haskino.ShallowDeepPlugin.XlatEntry
 import System.Hardware.Haskino.ShallowDeepPlugin.HaskinoXlatList
 
 import Data.Boolean
-import System.Hardware.Haskino
 
 repPushPass :: ModGuts -> CoreM ModGuts
 repPushPass guts = do
