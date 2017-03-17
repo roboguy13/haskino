@@ -62,30 +62,19 @@ import qualified Language.Haskell.TH as TH
 
 import System.Hardware.Haskino.ShallowDeepPlugin.Typechecker (initTcFromModGuts)
 
--- The following line contain the imports specific to the DSL language
--- being trnasformed, as well as Template Haskell definintions of the
--- DSL Monad and Expr types, names for the Worker/Wrapper abs/rep,
--- and names of the conditionals in the DSL.
-import qualified System.Hardware.Haskino
+import System.Hardware.Haskino.ShallowDeepPlugin.HaskinoUtils
 
-exprClassTyConTH     = ''System.Hardware.Haskino.ExprB
-exprTyConTH          = ''System.Hardware.Haskino.Expr
-monadCondTyConTH     = ''System.Hardware.Haskino.ArduinoConditional
-monadTyConTH         = ''System.Hardware.Haskino.Arduino
-absNameTH            = 'System.Hardware.Haskino.abs_
-repNameTH            = 'System.Hardware.Haskino.rep_
-ifThenElseNameTH     = 'System.Hardware.Haskino.ifThenElseE
-ifThenElseUnitNameTH = 'System.Hardware.Haskino.ifThenElseUnitE
 
--- The following lines contain definitions of Template Haskell namde
--- for standard Haskell functions.
-functTyConTH         = ''Data.Functor.Functor
-unitTyConTH          = ''()
-bindNameTH           = '(>>=)
-bindThenNameTH       = '(>>)
-falseNameTH          = 'Prelude.False
-fmapNameTH           = '(<$>)
-returnNameTH         = 'Prelude.return
+
+-- -- The following lines contain definitions of Template Haskell namde
+-- -- for standard Haskell functions.
+-- functTyConTH         = ''Data.Functor.Functor
+-- unitTyConTH          = ''()
+-- bindNameTH           = '(>>=)
+-- bindThenNameTH       = '(>>)
+-- falseNameTH          = 'Prelude.False
+-- fmapNameTH           = '(<$>)
+-- returnNameTH         = 'Prelude.return
 
 -- An infix pattern synonym for `App` to make applications with multiple
 -- arguments easier to manipulate:
