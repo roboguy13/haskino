@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- |
--- Module      :  System.Hardware.Haskino.ShallowDeepPlugin.RepPushPass
+-- Module      :  System.Hardware.Haskino.ShallowDeepPlugin.HaskinoXlatList
 -- Copyright   :  (c) University of Kansas
 -- License     :  BSD3
 -- Stability   :  experimental

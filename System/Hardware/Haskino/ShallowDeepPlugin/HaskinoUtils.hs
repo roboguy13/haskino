@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- |
--- Module      :  System.Hardware.Haskino.ShallowDeepPlugin.Utils
+-- Module      :  System.Hardware.Haskino.ShallowDeepPlugin.HaskinoUtils
 -- Copyright   :  (c) University of Kansas
 -- License     :  BSD3
 -- Stability   :  experimental
