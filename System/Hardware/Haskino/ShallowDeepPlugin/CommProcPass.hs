@@ -21,43 +21,12 @@ import Control.Monad.Reader
 
 import System.Hardware.Haskino.ShallowDeepPlugin.Utils
 
-import qualified System.Hardware.Haskino
-
-data XlatEntry = XlatEntry {  fromId   :: BindM Id
-                            , toId     :: BindM Id
-                           }
-
--- The following talbe defines the names of the Shallow DSL functions
--- to translate from and the Deep DSL functions to translate to.
-xlatList :: [XlatEntry]
-xlatList = [  XlatEntry (thNameToId 'System.Hardware.Haskino.loop)
-                        (thNameToId 'System.Hardware.Haskino.loopE)
-            , XlatEntry (thNameToId 'System.Hardware.Haskino.setPinMode)
-                        (thNameToId 'System.Hardware.Haskino.setPinModeE)
-            , XlatEntry (thNameToId 'System.Hardware.Haskino.digitalRead)
-                        (thNameToId 'System.Hardware.Haskino.digitalReadE)
-            , XlatEntry (thNameToId 'System.Hardware.Haskino.digitalWrite)
-                        (thNameToId 'System.Hardware.Haskino.digitalWriteE)
-            , XlatEntry (thNameToId 'System.Hardware.Haskino.delayMillis)
-                        (thNameToId 'System.Hardware.Haskino.delayMillisE)
-           ]
-
-data BindEnv
-    = BindEnv
-      { pluginModGuts :: ModGuts
-      }
-
-newtype BindM a = BindM { runCondM :: ReaderT BindEnv CoreM a }
-    deriving (Functor, Applicative, Monad
-             ,MonadIO, MonadReader BindEnv)
-
-instance PassCoreM BindM where
-  liftCoreM = BindM . ReaderT . const
-  getModGuts = BindM $ ReaderT (return . pluginModGuts)
+import System.Hardware.Haskino.ShallowDeepPlugin.XlatEntry
+import System.Hardware.Haskino.ShallowDeepPlugin.HaskinoXlatList
 
 commProcPass :: ModGuts -> CoreM ModGuts
 commProcPass guts = do
-    bindsOnlyPass (\x -> (runReaderT (runCondM $ (mapM commProcBind) x) (BindEnv guts))) guts
+    bindsOnlyPass (\x -> (runReaderT (runBindM $ (mapM commProcBind) x) (BindEnv guts))) guts
 
 commProcBind :: CoreBind -> BindM CoreBind
 commProcBind bndr@(NonRec b e) = do
@@ -69,7 +38,7 @@ commProcBind (Rec bs) = do
 
 funcInXlatList :: Id -> BindM (Maybe XlatEntry)
 funcInXlatList id = do
-  funcInXlatList' id xlatList
+  funcInXlatList' id commProcPassXlatList
     where
       funcInXlatList' :: Id -> [XlatEntry] -> BindM (Maybe XlatEntry)
       funcInXlatList' id [] = return Nothing
