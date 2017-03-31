@@ -1,3 +1,6 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GADTs #-}
+
 module System.Hardware.Haskino.ShallowDeepPlugin.AccType where
 
 -- Accelerate type for shallow embedding
@@ -15,8 +18,8 @@ data AccS a b
 
 -- Another idea (use a run function and combine the "transform everything
 -- of a certain type approach" and the "use a run function and push rep in"
--- approach)
+-- approach):
 
-run :: a -> Acc a
-run _ = undefined -- TODO: Implement
+run :: (Plain a ~ a, Lift Acc a) => a -> Acc a
+run = lift
 
