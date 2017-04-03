@@ -30,7 +30,7 @@ rep_ = lift
 
 exprClassTyConTH     = ''System.Hardware.Haskino.ShallowDeepPlugin.AccUtils.AExp
 exprTyConTH          = ''Data.Array.Accelerate.Exp
-monadCondTyConTH     = ''System.Hardware.Haskino.ShallowDeepPlugin.AccType.ExpM
+monadCondTyConTH     = ''Data.Array.Accelerate.Elt
 monadTyConTH         = ''System.Hardware.Haskino.ShallowDeepPlugin.AccType.ExpM
 absNameTH            = 'System.Hardware.Haskino.ShallowDeepPlugin.AccUtils.abs_
 repNameTH            = 'System.Hardware.Haskino.ShallowDeepPlugin.AccUtils.rep_
