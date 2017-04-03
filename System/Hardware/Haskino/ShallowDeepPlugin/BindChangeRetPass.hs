@@ -38,18 +38,27 @@ bindChangeRetPass :: ModGuts -> CoreM ModGuts
 bindChangeRetPass guts =
     bindsOnlyPass (\x -> (runReaderT (runBindM $ (mapM changeRetBind) x) (BindEnv guts))) guts
 
+-- | Skip any contexts to get to the actual type part
+splitTyConSkippingClasses_maybe :: Type -> Maybe (TyCon, [Type])
+splitTyConSkippingClasses_maybe x =
+  case splitTyConApp_maybe x of
+    split@(Just (left, [right]))
+      | isClassTyCon left -> splitTyConSkippingClasses_maybe right
+      | otherwise         -> split
+    _                     -> Nothing
+
 changeRetBind :: CoreBind -> BindM CoreBind
 changeRetBind bndr@(NonRec b e) = do
     df <- liftCoreM getDynFlags
     let (argTys, retTy) = splitFunTys $ varType b
-    let tyCon_m = splitTyConApp_maybe retTy
+    let tyCon_m = splitTyConSkippingClasses_maybe retTy
     monadTyCon <- thNameToTyCon monadTyConTH
     unitTyCon <- thNameToTyCon ''()
     let unitTyConTy = mkTyConTy unitTyCon
     case tyCon_m of
         -- We are looking for return types of Arduino a
-        Just (retTyCon, [retTy']) | retTyCon == monadTyCon &&
-                                    not (retTy' `eqType` unitTyConTy) -> do
+        Just (retTyCon, [retTy']) | pprTraceIt "retTyCon: " retTyCon == monadTyCon &&
+                                      not (retTy' `eqType` unitTyConTy) -> do
             let tyCon_m' = splitTyConApp_maybe retTy'
             case tyCon_m' of
                 -- We do not want types of Arduino (Expr a), so we look for an
@@ -68,5 +77,5 @@ changeRetBind bndr@(NonRec b e) = do
                     return (NonRec b' (mkCoreLams bs e''))
                 _ -> return bndr
         _ -> return bndr
-changeBind (Rec bs) = do
+changeRetBind (Rec bs) = do
     return $ Rec bs

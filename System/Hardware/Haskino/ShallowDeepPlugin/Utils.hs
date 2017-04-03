@@ -62,7 +62,7 @@ import qualified Language.Haskell.TH as TH
 
 import System.Hardware.Haskino.ShallowDeepPlugin.Typechecker (initTcFromModGuts)
 
-import System.Hardware.Haskino.ShallowDeepPlugin.HaskinoUtils
+import System.Hardware.Haskino.ShallowDeepPlugin.AccUtils
 
 
 
